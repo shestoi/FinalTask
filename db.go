@@ -221,5 +221,5 @@ func main() {
 	}
 	wg.Wait()
 
-	logger.Println("[INFO] Все операции  завершены")
+	logger.Println("[INFO] Все операции завершены")
 }

@@ -1,9 +1,9 @@
-package Final_Task
+package main
 
 import (
-	"awesomeProject1/Final_Task"
 	"bytes"
 	"context"
+	"github.com/shestoi/FinalTask"
 	"io"
 	"log"
 	"os"
@@ -197,7 +197,7 @@ func BenchmarkCopyFile(b *testing.B) {
 				go main.CopyFile(ctx, &wg, src, dst, logger)
 				wg.Wait()
 
-				_ = os.Remove(dst) //  Удалим dst после каждой итерации
+				_ = os.Remove(dst) // Удалим dst после каждой итерации
 			}
 		})
 	}
