@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
-	"github.com/shestoi/FinalTask"
+
 	"io"
 	"log"
 	"os"
@@ -50,7 +50,7 @@ func TestWriteDatas(t *testing.T) {
 
 			var wg sync.WaitGroup
 			wg.Add(1)
-			go main.writeDatas(ctx, &wg, src, data, logger)
+			go writeDatas(ctx, &wg, src, data, logger)
 			wg.Wait()
 
 			readData, _ := os.ReadFile(src)
@@ -82,7 +82,7 @@ func TestCopyFile(t *testing.T) {
 
 			var wg sync.WaitGroup
 			wg.Add(1)
-			go main.CopyFile(ctx, &wg, src, dst, logger)
+			go CopyFile(ctx, &wg, src, dst, logger)
 			wg.Wait()
 			readData, _ := os.ReadFile(dst)
 			if !bytes.Equal(readData, tt.data) {
@@ -112,17 +112,17 @@ func TestSyncFiles(t *testing.T) {
 			dst := createTempFile(t, "")
 			var wg sync.WaitGroup
 			wg.Add(1)
-			go main.writeDatas(ctx, &wg, src, tt.data, logger)
+			go writeDatas(ctx, &wg, src, tt.data, logger)
 			wg.Wait()
 			wg.Add(1)
-			go main.syncFiles(ctx, &wg, src, dst, logger)
+			go syncFiles(ctx, &wg, src, dst, logger)
 			wg.Wait()
 			readData, _ := os.ReadFile(dst)
 			if !bytes.Equal(readData, tt.data) {
 				t.Errorf("Ожидалось, что файл содержит '%s', но он содержит: %s", tt.data, readData)
 			}
 			wg.Add(1)
-			go main.removeFiles(ctx, &wg, tt.remove, tt.src, logger)
+			go removeFiles(ctx, &wg, tt.remove, tt.src, logger)
 			wg.Wait()
 			readData, _ = os.ReadFile(dst)
 			readSrc, _ := os.ReadFile(src)
@@ -154,10 +154,10 @@ func TestRemoveFiles(t *testing.T) {
 			//tt.src = createTempFile(t, "")
 			var wg sync.WaitGroup
 			wg.Add(1)
-			go main.writeDatas(ctx, &wg, src, tt.data, logger)
+			go writeDatas(ctx, &wg, src, tt.data, logger)
 			wg.Wait()
 			wg.Add(1)
-			go main.removeFiles(ctx, &wg, tt.remove, src, logger)
+			go removeFiles(ctx, &wg, tt.remove, src, logger)
 			wg.Wait()
 			readData, _ := os.ReadFile(src)
 			if !bytes.Equal(readData, tt.want) {
@@ -194,7 +194,7 @@ func BenchmarkCopyFile(b *testing.B) {
 
 				var wg sync.WaitGroup
 				wg.Add(1)
-				go main.CopyFile(ctx, &wg, src, dst, logger)
+				go CopyFile(ctx, &wg, src, dst, logger)
 				wg.Wait()
 
 				_ = os.Remove(dst) // Удалим dst после каждой итерации
